@@ -24,22 +24,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build app
-        run: npm run build
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # If Vite or React creates a /dist folder instead, change this to './dist'
+          path: './' # Serve the repository files directly from root
 
       - name: Deploy to GitHub Pages
         id: deployment
