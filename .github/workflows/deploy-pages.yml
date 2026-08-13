@@ -8,15 +8,15 @@ on:
 
 permissions:
   contents: write
-  pages: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -32,14 +32,11 @@ jobs:
           NODE_ENV: production
         run: npm run build
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v3
-
-      - name: Upload artifact
-        # Use the newer release which depends on upload-artifact v4 (avoid deprecated v3)
-        uses: actions/upload-pages-artifact@v2
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./build
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+          # directory produced by adapter-static per our svelte.config.js
+          publish_dir: ./build
+          publish_branch: gh-pages
+          # Use the provided GITHUB_TOKEN so no extra secret needed
+          github_token: ${{ secrets.GITHUB_TOKEN }}
